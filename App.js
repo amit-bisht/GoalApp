@@ -1,4 +1,5 @@
 import { View, StyleSheet, FlatList, Button } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
@@ -10,38 +11,44 @@ const App = () => {
     setGoals((prevData) => {
       return ([...prevData, { text: enteredText, id: Math.random().toString() }])
     })
+    hideDisplayHandler()
+
   }
   function deleteGoalHandler(id) {
     console.log("deleted")
     const newData = goals.filter(item => item.id !== id)
     setGoals(newData)
   }
-  function displayHandler(){
+  function displayHandler() {
     setDisplayForm(true)
   }
-  function hideDisplayHandler(){
+  function hideDisplayHandler() {
     setDisplayForm(false)
   }
   return (
-    <View style={styles.appContainer}>
-      <Button title="Add a Goal" color="#5e0acc" onPress={displayHandler}/>
-      {displayForm && <GoalInput onHide={hideDisplayHandler} onAddGoal={addGoalHandler} /> }
-      <View style={styles.goalsContainer}>
-        <FlatList data={goals} renderItem={(itemData) => {
-          return <GoalItem onDelete={deleteGoalHandler} itemData={itemData} />
-        }}
-          keyExtractor={(item, index) => { return (item.id) }}
-        >
-        </FlatList>
+    <>
+    <StatusBar style='light'/>
+      <View style={styles.appContainer}>
+        <Button title="Add a Goal" color="#5e0acc" onPress={displayHandler} />
+        <GoalInput displayForm={displayForm} onHide={hideDisplayHandler} onAddGoal={addGoalHandler} />
+        <View style={styles.goalsContainer}>
+          <FlatList data={goals} renderItem={(itemData) => {
+            return <GoalItem onDelete={deleteGoalHandler} itemData={itemData} />
+          }}
+            keyExtractor={(item, index) => { return (item.id) }}
+          >
+          </FlatList>
+        </View>
       </View>
-    </View>
+    </>
   )
 }
 const styles = StyleSheet.create({
   appContainer: {
     paddingTop: 50,
     paddingHorizontal: 16,
-    flex: 1
+    flex: 1,
+    backgroundColor: '#1e085a'
   },
   goalsContainer: {
     flex: 5
